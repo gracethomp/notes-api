@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 export interface Note {
-  id: ObjectId;
+  _id: ObjectId;
   name: string;
   timeOfCreation: string;
   category: string;

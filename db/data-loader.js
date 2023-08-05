@@ -1,9 +1,10 @@
 const conn = new Mongo();
 const db = conn.getDB("mydb");
 
-const collection = db.getCollection("notes");
+const notesCollection = db.getCollection("notes");
+const categoriesCollection = db.getCollection("categories");
 
-const data = [
+const notes = [
   {
     name: "Shopping list",
     timeOfCreation: "April 20, 2021, 12:00",
@@ -64,4 +65,23 @@ const data = [
   },
 ];
 
-collection.insertMany(data);
+const categories = [
+  {
+    name: "Task",
+    active: 3,
+    archived: 0,
+  },
+  {
+    name: "Random Thought",
+    active: 1,
+    archived: 1,
+  },
+  {
+    name: "Idea",
+    active: 2,
+    archived: 0,
+  },
+];
+
+notesCollection.insertMany(notes);
+categoriesCollection.insertMany(categories);

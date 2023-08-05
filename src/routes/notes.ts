@@ -1,5 +1,5 @@
 import express from "express";
-import { getNoteById } from "../services/notes";
+import { getAllNodes, getNoteById, getStats } from "../services/notes";
 import { ObjectId } from "mongodb";
 const router = express.Router();
 
@@ -15,24 +15,20 @@ router.delete("/:id", (req, res) => {
   res.json({ message: "Remove item" });
 });
 
-router.get("/stats", (req, res) => {
-  res.json({ message: "Get aggregated data statistics" });
+router.get("/stats", async (req, res) => {
+  const stats = await getStats();
+  res.send(stats);
 });
 
-router.get("/:id", (req, res) => {
-  const objectId = new ObjectId(req.params.id);
-  const note = getNoteById(objectId)
-    .then((result) => {
-      console.log(objectId);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  res.json({ message: "Retrieve item." });
+router.get("/:id", async (req, res) => {
+  const id = req.params.id;
+  const note = await getNoteById(id);
+  res.send(note);
 });
 
-router.get("/", (req, res) => {
-  res.json({ message: "All notes will be here" });
+router.get("/", async (req, res) => {
+  const allNotes = await getAllNodes();
+  res.send(allNotes);
 });
 
 export default router;
