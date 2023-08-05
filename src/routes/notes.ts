@@ -1,4 +1,6 @@
 import express from "express";
+import { getNoteById } from "../services/notes";
+import { ObjectId } from "mongodb";
 const router = express.Router();
 
 router.post("/", (req, res) => {
@@ -18,6 +20,14 @@ router.get("/stats", (req, res) => {
 });
 
 router.get("/:id", (req, res) => {
+  const objectId = new ObjectId(req.params.id);
+  const note = getNoteById(objectId)
+    .then((result) => {
+      console.log(objectId);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   res.json({ message: "Retrieve item." });
 });
 
