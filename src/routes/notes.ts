@@ -1,5 +1,11 @@
 import express from "express";
-import { createNewNote, getAllNodes, getNoteById, getStats } from "../services/notes";
+import {
+  createNewNote,
+  getAllNodes,
+  getNoteById,
+  getStats,
+  removeNoteById,
+} from "../services/notes";
 
 const router = express.Router();
 
@@ -17,8 +23,14 @@ router.patch("/:id", (req, res) => {
   res.json({ message: "Edit item." });
 });
 
-router.delete("/:id", (req, res) => {
-  res.json({ message: "Remove item" });
+router.delete("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    await removeNoteById(id);
+    res.json({ message: "Successful delete note object with id " + id });
+  } catch {
+    res.json({ error: "Error while delete data" });
+  }
 });
 
 router.get("/stats", async (req, res) => {
