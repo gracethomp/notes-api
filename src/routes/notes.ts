@@ -1,10 +1,16 @@
 import express from "express";
-import { getAllNodes, getNoteById, getStats } from "../services/notes";
-import { ObjectId } from "mongodb";
+import { createNewNote, getAllNodes, getNoteById, getStats } from "../services/notes";
+
 const router = express.Router();
 
-router.post("/", (req, res) => {
-  res.json({ message: "Create a note object" });
+router.post("/", async (req, res) => {
+  try {
+    const newNote = req.body;
+    const newNoteId = await createNewNote(newNote);
+    res.json({ message: "Create a note object " + newNoteId });
+  } catch {
+    res.json({ error: "Error while post data" });
+  }
 });
 
 router.patch("/:id", (req, res) => {

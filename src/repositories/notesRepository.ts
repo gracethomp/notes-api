@@ -9,6 +9,15 @@ const database = client.db(DB_NAME);
 
 const notes = database.collection<Note>("notes");
 
+export async function insertNewNote(newNote:Note) {
+    try {
+        const insertOneResult = await notes.insertOne(newNote);
+        return insertOneResult.insertedId;
+    } catch (error) {
+        throw new Error("error while adding");
+    }
+}
+
 export async function findByID(id: ObjectId) {
   const note = await notes.findOne<Note>({ _id: id });
   return note;
