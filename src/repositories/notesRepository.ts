@@ -1,16 +1,11 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { Note } from "../helpers/Note";
-
-const MONGO_URI = "mongodb://localhost:27017";
-const DB_NAME = "mydb";
-
-const client = new MongoClient(MONGO_URI);
-const database = client.db(DB_NAME);
-
-const notes = database.collection<Note>("notes");
+import { getDatabase } from "../helpers/db";
 
 export async function insertNewNote(newNote: Note) {
   try {
+    const database = getDatabase();
+    const notes = database.collection<Note>("notes");
     const insertOneResult = await notes.insertOne(newNote);
     return insertOneResult.insertedId;
   } catch (error) {
@@ -19,6 +14,8 @@ export async function insertNewNote(newNote: Note) {
 }
 
 export async function updateNote(id: ObjectId, updates: Object) {
+  const database = getDatabase();
+  const notes = database.collection<Note>("notes");
   const result = await notes.updateOne({ _id: id }, { $set: updates });
   if (result.modifiedCount === 1) {
     return true;
@@ -28,6 +25,8 @@ export async function updateNote(id: ObjectId, updates: Object) {
 }
 
 export async function deleteNodeById(id: ObjectId) {
+  const database = getDatabase();
+  const notes = database.collection<Note>("notes");
   const query = { _id: id };
   const result = await notes.deleteOne(query);
   if (result.deletedCount === 1) {
@@ -38,6 +37,8 @@ export async function deleteNodeById(id: ObjectId) {
 }
 
 export async function findNoteByID(id: ObjectId) {
+  const database = getDatabase();
+  const notes = database.collection<Note>("notes");
   const query = { _id: id };
   const note = await notes.findOne<Note>(query);
   if (!note) {
@@ -47,6 +48,8 @@ export async function findNoteByID(id: ObjectId) {
 }
 
 export async function findAllNotes() {
+  const database = getDatabase();
+  const notes = database.collection<Note>("notes");
   const allNotes: Note[] = await notes.find({}).toArray();
   return allNotes;
 }

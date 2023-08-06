@@ -7,9 +7,7 @@ import {
   updateNote,
 } from "../repositories/notesRepository";
 import { Note } from "../helpers/Note";
-import {
-  findAllCategories,
-} from "../repositories/categoriesRepository";
+import { findAllCategories } from "../repositories/categoriesRepository";
 
 interface CategoryStats {
   archived: number;
@@ -45,8 +43,13 @@ export async function getAllNodes() {
 }
 
 export async function getStats() {
+  const categoryStats: { [category: string]: CategoryStats } =
+    await calculateStats();
+  return categoryStats;
+}
+
+const initCategoryStats = async () => {
   const categories = await findAllCategories();
-  const allNotes: Note[] = await findAllNotes();
   const categoryStats: { [category: string]: CategoryStats } = {};
   categories.forEach((category) => {
     categoryStats[category.name] = {
@@ -54,6 +57,13 @@ export async function getStats() {
       active: 0,
     };
   });
+  return categoryStats;
+};
+
+const calculateStats = async () => {
+  const categoryStats: { [category: string]: CategoryStats } =
+    await initCategoryStats();
+  const allNotes: Note[] = await findAllNotes();
   allNotes.forEach((note) => {
     const { noteCategory, isArchived } = note;
     if (categoryStats.hasOwnProperty(noteCategory)) {
@@ -65,4 +75,4 @@ export async function getStats() {
     }
   });
   return categoryStats;
-}
+};
