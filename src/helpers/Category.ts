@@ -1,7 +1,5 @@
-import { ObjectId } from "mongodb";
-
 export interface Category {
-  category: string;
+  name: string;
   active: number;
   archived: number;
 }

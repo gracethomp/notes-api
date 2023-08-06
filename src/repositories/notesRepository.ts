@@ -19,11 +19,11 @@ export async function insertNewNote(newNote: Note) {
 }
 
 export async function updateNote(id: ObjectId, updates: Object) {
-  try {
-    const result = await notes.updateOne({ _id: id }, { $set: updates });
-    return result;
-  } catch (error) {
-    throw new Error("error while updating");
+  const result = await notes.updateOne({ _id: id }, { $set: updates });
+  if (result.modifiedCount === 1) {
+    return true;
+  } else {
+    throw new Error("error while deleting");
   }
 }
 
@@ -37,9 +37,12 @@ export async function deleteNodeById(id: ObjectId) {
   }
 }
 
-export async function findByID(id: ObjectId) {
+export async function findNoteByID(id: ObjectId) {
   const query = { _id: id };
   const note = await notes.findOne<Note>(query);
+  if (!note) {
+    throw new Error("Note wasn't found");
+  }
   return note;
 }
 

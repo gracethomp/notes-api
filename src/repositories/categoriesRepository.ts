@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient} from "mongodb";
 import { Category } from "../helpers/Category";
 
 const MONGO_URI = "mongodb://localhost:27017";

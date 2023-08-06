@@ -1,4 +1,4 @@
-import express, { RequestHandler, Response } from "express";
+import express, { RequestHandler } from "express";
 import {
   createNewNote,
   editNote,
@@ -26,7 +26,7 @@ const validateNewNoteData: RequestHandler = async (req, res, next) => {
     console.log(result);
     next();
   } catch (error) {
-    res.status(400).json({ error: "Validation error." });
+    res.status(400).json({ error: "Validation error. Your request body is wrong" });
   }
 };
 
@@ -37,7 +37,7 @@ const validateUpdateNote: RequestHandler = async (req, res, next) => {
     console.log(result);
     next();
   } catch (error) {
-    res.status(400).json({ error: "Validation error." });
+    res.status(400).json({ error: "Validation error. Your request body is wrong" });
   }
 }
 
@@ -57,7 +57,7 @@ router.patch("/:id", validateObjectId, validateUpdateNote,  async (req, res) => 
   try {
     const id = req.params.id;
     const updates = req.body;
-    const noteId = await editNote(id, updates);
+    await editNote(id, updates);
     res.json({ message: "Update a note object " + id});
   } catch {
     res.json({ error: "Error while updating data" });
