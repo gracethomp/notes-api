@@ -4,6 +4,7 @@ import {
   findAllNotes,
   insertNewNote,
   deleteNodeById,
+  updateNote,
 } from "../repositories/notesRepository";
 import { Note } from "../helpers/Note";
 import { Category } from "../helpers/Category";
@@ -12,6 +13,12 @@ import { findAllCategories } from "../repositories/categoriesRepository";
 export async function createNewNote(note: Note) {
   const id = await insertNewNote(note);
   return id;
+}
+
+export async function editNote(id:string, updates: any) {
+    const objectId: ObjectId = new ObjectId(id);
+    const updatedId = await updateNote(objectId, updates);
+    return updatedId;
 }
 
 export async function removeNoteById(id: string) {

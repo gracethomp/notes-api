@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createNewNote,
+  editNote,
   getAllNodes,
   getNoteById,
   getStats,
@@ -19,8 +20,15 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch("/:id", (req, res) => {
-  res.json({ message: "Edit item." });
+router.patch("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updates = req.body;
+    const newNoteId = await editNote(id, updates);
+    res.json({ message: "Update a note object " + newNoteId });
+  } catch {
+    res.json({ error: "Error while updating data" });
+  }
 });
 
 router.delete("/:id", async (req, res) => {

@@ -14,7 +14,16 @@ export async function insertNewNote(newNote: Note) {
     const insertOneResult = await notes.insertOne(newNote);
     return insertOneResult.insertedId;
   } catch (error) {
-    throw new Error("error while adding");
+    throw new Error("error while inserting");
+  }
+}
+
+export async function updateNote(id: ObjectId, updates: any) {
+  try {
+    const result = await notes.updateOne({ _id: id }, { $set: updates });
+    return result.upsertedId;
+  } catch (error) {
+    throw new Error("error while updating");
   }
 }
 
