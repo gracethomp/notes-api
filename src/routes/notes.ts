@@ -7,29 +7,42 @@ import {
   getStats,
   removeNoteById,
 } from "../services/notes";
-import { objectIdSchema, postNoteSchema } from "../services/validation";
+import { objectIdSchema, patchSchema, postNoteSchema } from "../services/validation";
 
 const validateObjectId: RequestHandler = async (req, res, next) => {
   try {
-    await objectIdSchema.validate(req.params.id);
+    const id = req.params.id;
+    await objectIdSchema.validate(id);
     next();
   } catch (error) {
-    res.status(400).json({ error: "Wrong id" });
+    res.status(400).json({ error: "Wrong id format" });
   }
 };
 
-const validateNoteData: RequestHandler = async (req, res, next) => {
+const validateNewNoteData: RequestHandler = async (req, res, next) => {
   try {
-    await postNoteSchema.validate(req.body);
+    const requestBody = req.body;
+    await postNoteSchema.validate(requestBody);
     next();
   } catch (error) {
     res.status(400).json({ error: "Validation error." });
   }
 };
 
+const validateUpdateNote: RequestHandler = async (req, res, next) => {
+  try {
+    const requestBody = req.body;
+    const result = await patchSchema.validate(requestBody, {strict: true});
+    console.log(result);
+    next();
+  } catch (error) {
+    res.status(400).json({ error: "Validation error." });
+  }
+}
+
 const router = express.Router();
 
-router.post("/", validateNoteData, async (req, res) => {
+router.post("/", validateNewNoteData, async (req, res) => {
   try {
     const newNote = req.body;
     const newNoteId = await createNewNote(newNote);
@@ -39,12 +52,12 @@ router.post("/", validateNoteData, async (req, res) => {
   }
 });
 
-router.patch("/:id", validateObjectId,  async (req, res) => {
+router.patch("/:id", validateObjectId, validateUpdateNote,  async (req, res) => {
   try {
     const id = req.params.id;
     const updates = req.body;
     const noteId = await editNote(id, updates);
-    res.json({ message: "Update a note object " + noteId });
+    res.json({ message: "Update a note object " + id});
   } catch {
     res.json({ error: "Error while updating data" });
   }

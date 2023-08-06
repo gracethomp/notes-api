@@ -7,16 +7,16 @@ export const postNoteSchema = object().shape({
   noteContent: string().defined(),
   datesMentioned: string().defined(),
   isArchived: boolean().defined(),
-});
+}).noUnknown();
 
 export const patchSchema = object().shape({
-  name: string().optional(),
-  timeOfCreation: string().optional(),
-  noteCategory: string().optional(),
-  noteContent: string().optional(),
-  datesMentioned: string().optional(),
-  isArchived: boolean().optional(),
-});
+  name: string(),
+  timeOfCreation: string(),
+  noteCategory: string(),
+  noteContent: string(),
+  datesMentioned: string(),
+  isArchived: boolean(),
+}).noUnknown();
 
 export const objectIdSchema = string().test(
   "valid-objectId",
