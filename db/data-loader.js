@@ -1,16 +1,17 @@
 const conn = new Mongo();
 const db = conn.getDB("mydb");
 
-const collection = db.getCollection("notes");
+const notesCollection = db.getCollection("notes");
+const categoriesCollection = db.getCollection("categories");
 
-const data = [
+const notes = [
   {
     name: "Shopping list",
     timeOfCreation: "April 20, 2021, 12:00",
     noteCategory: "Task",
     noteContent: "Tomatoes, Bread",
-    datesMentioned: [],
-    archived: false,
+    datesMentioned: "",
+    isArchived: false,
   },
   {
     name: "The theory of evolution",
@@ -18,24 +19,24 @@ const data = [
     noteCategory: "Random Thought",
     noteContent:
       "Life's journey is an unpredictable dance, where the steps we take shape the music we leave behind.",
-    datesMentioned: [],
-    archived: true,
+    datesMentioned: "",
+    isArchived: true,
   },
   {
     name: "New feature",
     timeOfCreation: "May 5, 2021, 15:36",
     noteCategory: "Idea",
     noteContent: "Implement new feature (3/5/2021, 5/5/2021)",
-    datesMentioned: ["3/5/2021", "5/5/2021"],
-    archived: false,
+    datesMentioned: "3/5/2021, 5/5/2021",
+    isArchived: false,
   },
   {
     name: "Sweet dream",
     timeOfCreation: "May 7, 2021, 17:54",
     noteCategory: "Random Thought",
     noteContent: "Had an interesting dream last night",
-    datesMentioned: [],
-    archived: false,
+    datesMentioned: "",
+    isArchived: false,
   },
   {
     name: "Birthday gift",
@@ -43,25 +44,44 @@ const data = [
     noteCategory: "Task",
     noteContent:
       "Grace has a birthday on 17/05/2021. Don't forget to buy a gift.",
-    datesMentioned: ["17/05/2021"],
-    archived: false,
+    datesMentioned: "17/05/2021",
+    isArchived: false,
   },
   {
     name: "Trip",
     timeOfCreation: "May 17, 2021, 3:25",
     noteCategory: "Task",
     noteContent: "Plan a weekend trip",
-    datesMentioned: [],
-    archived: false,
+    datesMentioned: "",
+    isArchived: false,
   },
   {
     name: "Pet-project",
     timeOfCreation: "July 21, 2021, 20:45",
     noteCategory: "Idea",
     noteContent: "Idea for a new project: Create a recipe sharing app",
-    datesMentioned: [],
-    archived: false,
+    datesMentioned: "",
+    isArchived: false,
   },
 ];
 
-collection.insertMany(data);
+const categories = [
+  {
+    name: "Task",
+    active: 3,
+    archived: 0,
+  },
+  {
+    name: "Random Thought",
+    active: 1,
+    archived: 1,
+  },
+  {
+    name: "Idea",
+    active: 2,
+    archived: 0,
+  },
+];
+
+notesCollection.insertMany(notes);
+categoriesCollection.insertMany(categories);
