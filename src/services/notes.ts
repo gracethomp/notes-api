@@ -18,7 +18,7 @@ export async function createNewNote(note: Note) {
 export async function editNote(id:string, updates: any) {
     const objectId: ObjectId = new ObjectId(id);
     const updatedId = await updateNote(objectId, updates);
-    return updatedId;
+    return updatedId; 
 }
 
 export async function removeNoteById(id: string) {

@@ -1,4 +1,4 @@
-import express from "express";
+import express, { RequestHandler, Response } from "express";
 import {
   createNewNote,
   editNote,
@@ -7,10 +7,29 @@ import {
   getStats,
   removeNoteById,
 } from "../services/notes";
+import { objectIdSchema, postNoteSchema } from "../services/validation";
+
+const validateObjectId: RequestHandler = async (req, res, next) => {
+  try {
+    await objectIdSchema.validate(req.params.id);
+    next();
+  } catch (error) {
+    res.status(400).json({ error: "Wrong id" });
+  }
+};
+
+const validateNoteData: RequestHandler = async (req, res, next) => {
+  try {
+    await postNoteSchema.validate(req.body);
+    next();
+  } catch (error) {
+    res.status(400).json({ error: "Validation error." });
+  }
+};
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", validateNoteData, async (req, res) => {
   try {
     const newNote = req.body;
     const newNoteId = await createNewNote(newNote);
@@ -20,18 +39,18 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", validateObjectId,  async (req, res) => {
   try {
     const id = req.params.id;
     const updates = req.body;
-    const newNoteId = await editNote(id, updates);
-    res.json({ message: "Update a note object " + newNoteId });
+    const noteId = await editNote(id, updates);
+    res.json({ message: "Update a note object " + noteId });
   } catch {
     res.json({ error: "Error while updating data" });
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", validateObjectId,  async (req, res) => {
   try {
     const id = req.params.id;
     await removeNoteById(id);
@@ -46,7 +65,7 @@ router.get("/stats", async (req, res) => {
   res.send(stats);
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", validateObjectId, async (req, res) => {
   const id = req.params.id;
   const note = await getNoteById(id);
   res.send(note);

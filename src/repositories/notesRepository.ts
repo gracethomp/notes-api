@@ -18,10 +18,10 @@ export async function insertNewNote(newNote: Note) {
   }
 }
 
-export async function updateNote(id: ObjectId, updates: any) {
+export async function updateNote(id: ObjectId, updates: Object) {
   try {
     const result = await notes.updateOne({ _id: id }, { $set: updates });
-    return result.upsertedId;
+    return result;
   } catch (error) {
     throw new Error("error while updating");
   }
