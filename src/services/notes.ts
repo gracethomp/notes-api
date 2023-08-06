@@ -21,8 +21,11 @@ export async function createNewNote(note: Note) {
 
 export async function editNote(id: string, updates: Object) {
   const objectId: ObjectId = new ObjectId(id);
-  const updatedId = await updateNote(objectId, updates);
-  return updatedId;
+  const updated = await updateNote(objectId, updates);
+  if(updated.matchedCount === 0) {
+    throw new Error("Note wasn't found");
+  }
+  return updated;
 }
 
 export async function removeNoteById(id: string) {

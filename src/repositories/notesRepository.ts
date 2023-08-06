@@ -17,11 +17,7 @@ export async function updateNote(id: ObjectId, updates: Object) {
   const database = getDatabase();
   const notes = database.collection<Note>("notes");
   const result = await notes.updateOne({ _id: id }, { $set: updates });
-  if (result.modifiedCount === 1) {
-    return true;
-  } else {
-    throw new Error("error while deleting");
-  }
+  return result;
 }
 
 export async function deleteNodeById(id: ObjectId) {

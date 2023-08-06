@@ -7,7 +7,12 @@ import {
   getStats,
   removeNoteById,
 } from "../services/notes";
-import { objectIdSchema, patchSchema, postNoteSchema } from "../services/validation";
+import {
+  objectIdSchema,
+  patchSchema,
+  postNoteSchema,
+} from "../services/validation";
+import { json } from "body-parser";
 
 const validateObjectId: RequestHandler = async (req, res, next) => {
   try {
@@ -22,24 +27,28 @@ const validateObjectId: RequestHandler = async (req, res, next) => {
 const validateNewNoteData: RequestHandler = async (req, res, next) => {
   try {
     const requestBody = req.body;
-    const result = await postNoteSchema.validate(requestBody, {strict: true});
+    const result = await postNoteSchema.validate(requestBody, { strict: true });
     console.log(result);
     next();
   } catch (error) {
-    res.status(400).json({ error: "Validation error. Your request body is wrong" });
+    res
+      .status(400)
+      .json({ error: "Validation error. Your request body is wrong" });
   }
 };
 
 const validateUpdateNote: RequestHandler = async (req, res, next) => {
   try {
     const requestBody = req.body;
-    const result = await patchSchema.validate(requestBody, {strict: true});
+    const result = await patchSchema.validate(requestBody, { strict: true });
     console.log(result);
     next();
   } catch (error) {
-    res.status(400).json({ error: "Validation error. Your request body is wrong" });
+    res
+      .status(400)
+      .json({ error: "Validation error. Your request body is wrong" });
   }
-}
+};
 
 const router = express.Router();
 
@@ -53,18 +62,18 @@ router.post("/", validateNewNoteData, async (req, res) => {
   }
 });
 
-router.patch("/:id", validateObjectId, validateUpdateNote,  async (req, res) => {
+router.patch("/:id", validateObjectId, validateUpdateNote, async (req, res) => {
   try {
     const id = req.params.id;
     const updates = req.body;
     await editNote(id, updates);
-    res.json({ message: "Update a note object " + id});
+    res.json({ message: "Update a note object " + id });
   } catch {
     res.json({ error: "Error while updating data" });
   }
 });
 
-router.delete("/:id", validateObjectId,  async (req, res) => {
+router.delete("/:id", validateObjectId, async (req, res) => {
   try {
     const id = req.params.id;
     await removeNoteById(id);
@@ -80,9 +89,13 @@ router.get("/stats", async (req, res) => {
 });
 
 router.get("/:id", validateObjectId, async (req, res) => {
-  const id = req.params.id;
-  const note = await getNoteById(id);
-  res.send(note);
+  try {
+    const id = req.params.id;
+    const note = await getNoteById(id);
+    res.send(note);
+  } catch {
+    res.status(404).json({error: "Element not found"})
+  }
 });
 
 router.get("/", async (req, res) => {
