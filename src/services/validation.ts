@@ -1,21 +1,21 @@
 import { object, boolean, string, ObjectSchema } from "yup";
 
 export const postNoteSchema = object().shape({
-  name: string().defined(),
-  timeOfCreation: string().defined(),
-  noteCategory: string().defined(),
-  noteContent: string().defined(),
+  name: string().required(),
+  timeOfCreation: string().required(),
+  noteCategory: string().required(),
+  noteContent: string().required(),
   datesMentioned: string().defined(),
-  isArchived: boolean().defined(),
+  isArchived: boolean().required(),
 }).noUnknown();
 
 export const patchSchema = object().shape({
-  name: string(),
-  timeOfCreation: string(),
-  noteCategory: string(),
-  noteContent: string(),
-  datesMentioned: string(),
-  isArchived: boolean(),
+  name: string().optional(),
+  timeOfCreation: string().optional(),
+  noteCategory: string().optional(),
+  noteContent: string().optional(),
+  datesMentioned: string().optional(),
+  isArchived: boolean().optional(),
 }).noUnknown();
 
 export const objectIdSchema = string().test(

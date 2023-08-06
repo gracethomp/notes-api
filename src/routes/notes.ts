@@ -22,7 +22,8 @@ const validateObjectId: RequestHandler = async (req, res, next) => {
 const validateNewNoteData: RequestHandler = async (req, res, next) => {
   try {
     const requestBody = req.body;
-    await postNoteSchema.validate(requestBody);
+    const result = await postNoteSchema.validate(requestBody, {strict: true});
+    console.log(result);
     next();
   } catch (error) {
     res.status(400).json({ error: "Validation error." });
