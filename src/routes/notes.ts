@@ -1,4 +1,4 @@
-import express, { RequestHandler } from "express";
+import express, { NextFunction, RequestHandler } from "express";
 import {
   createNewNote,
   editNote,
@@ -12,6 +12,8 @@ import {
   patchSchema,
   postNoteSchema,
 } from "../services/validation";
+
+
 
 const validateObjectId: RequestHandler = async (req, res, next) => {
   try {
@@ -51,11 +53,13 @@ const validateUpdateNote: RequestHandler = async (req, res, next) => {
 
 const router = express.Router();
 
+
 router.post("/", validateNewNoteData, async (req, res) => {
   try {
     const newNote = req.body;
+    console.log(newNote);
     const newNoteId = await createNewNote(newNote);
-    res.json({ message: "Created a note object " + newNoteId });
+    res.status(201).json({ message: "Created a note object " + newNoteId });
   } catch {
     res.status(500).json({ error: "Error while posting data" });
   }
