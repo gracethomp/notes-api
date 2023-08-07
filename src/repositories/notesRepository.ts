@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { Note } from "../helpers/Note";
 import { getDatabase } from "../helpers/db";
 
@@ -20,16 +20,12 @@ export async function updateNote(id: ObjectId, updates: Object) {
   return result;
 }
 
-export async function deleteNodeById(id: ObjectId) {
+export async function deleteNoteById(id: ObjectId) {
   const database = getDatabase();
   const notes = database.collection<Note>("notes");
   const query = { _id: id };
   const result = await notes.deleteOne(query);
-  if (result.deletedCount === 1) {
-    return true;
-  } else {
-    throw new Error("error while deleting");
-  }
+  return result;
 }
 
 export async function findNoteByID(id: ObjectId) {

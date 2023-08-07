@@ -16,4 +16,8 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
+app.all("*", (req, res) => {
+  res.status(404).json({ error: "Endpoint not found" });
+});
+
 connectToDatabase();

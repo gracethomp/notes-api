@@ -2,7 +2,7 @@ import express, { RequestHandler } from "express";
 import {
   createNewNote,
   editNote,
-  getAllNodes,
+  getAllNotes,
   getNoteById,
   getStats,
   removeNoteById,
@@ -12,7 +12,6 @@ import {
   patchSchema,
   postNoteSchema,
 } from "../services/validation";
-import { json } from "body-parser";
 
 const validateObjectId: RequestHandler = async (req, res, next) => {
   try {
@@ -56,9 +55,9 @@ router.post("/", validateNewNoteData, async (req, res) => {
   try {
     const newNote = req.body;
     const newNoteId = await createNewNote(newNote);
-    res.json({ message: "Create a note object " + newNoteId });
+    res.json({ message: "Created a note object " + newNoteId });
   } catch {
-    res.json({ error: "Error while post data" });
+    res.status(500).json({ error: "Error while posting data" });
   }
 });
 
@@ -67,9 +66,9 @@ router.patch("/:id", validateObjectId, validateUpdateNote, async (req, res) => {
     const id = req.params.id;
     const updates = req.body;
     await editNote(id, updates);
-    res.json({ message: "Update a note object " + id });
+    res.json({ message: "Updated a note object " + id });
   } catch {
-    res.json({ error: "Error while updating data" });
+    res.status(500).json({ error: "Error while updating data" });
   }
 });
 
@@ -79,28 +78,40 @@ router.delete("/:id", validateObjectId, async (req, res) => {
     await removeNoteById(id);
     res.json({ message: "Successful delete note object with id " + id });
   } catch {
-    res.json({ error: "Error while delete data" });
+    res.status(500).json({ error: "Error while deleting data" });
   }
 });
 
 router.get("/stats", async (req, res) => {
-  const stats = await getStats();
-  res.send(stats);
+  try {
+    const stats = await getStats();
+    res.send(stats);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error while retrieving statistics" });
+  }
 });
 
 router.get("/:id", validateObjectId, async (req, res) => {
   try {
     const id = req.params.id;
     const note = await getNoteById(id);
+    if (!note) {
+      return res.status(404).json({ error: "Element not found" });
+    }
     res.send(note);
   } catch {
-    res.status(404).json({error: "Element not found"})
+    res.status(500).json({ error: "Error while retrieving data" });
   }
 });
 
 router.get("/", async (req, res) => {
-  const allNotes = await getAllNodes();
-  res.send(allNotes);
+  try {
+    const allNotes = await getAllNotes();
+    res.send(allNotes);
+  } catch (error) {
+    res.status(500).json({ error: "Error while retrieving data" });
+  }
 });
 
 export default router;
