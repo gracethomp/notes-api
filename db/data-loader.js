@@ -68,18 +68,12 @@ const notes = [
 const categories = [
   {
     name: "Task",
-    active: 3,
-    archived: 0,
   },
   {
     name: "Random Thought",
-    active: 1,
-    archived: 1,
   },
   {
     name: "Idea",
-    active: 2,
-    archived: 0,
   },
 ];
 
