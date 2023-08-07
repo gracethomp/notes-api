@@ -1,4 +1,4 @@
-# Notes Api
+# Notes API
 
 Before starting the server, you need to start the docker container with the database. To do this, open the repository folder and enter the following commands:
 
