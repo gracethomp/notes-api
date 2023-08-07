@@ -34,9 +34,6 @@ export async function editNote(
 ): Promise<UpdateResult<Note>> {
   const objectId: ObjectId = new ObjectId(id);
   const updated = await updateNote(objectId, updates);
-  if (updated.matchedCount === 0) {
-    throw new Error("Note wasn't found");
-  }
   return updated;
 }
 
@@ -45,12 +42,11 @@ export async function removeNoteById(id: string): Promise<boolean> {
   const result = await deleteNoteById(objectId);
   if (result.deletedCount === 1) {
     return true;
-  } else {
-    throw new Error("error while deleting");
   }
+  return false;
 }
 
-export async function getNoteById(id: string): Promise<Note> {
+export async function getNoteById(id: string): Promise<Note | undefined> {
   const objectId: ObjectId = new ObjectId(id);
   const newNote = await findNoteByID(objectId);
   return newNote;

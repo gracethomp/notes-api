@@ -34,7 +34,7 @@ export async function findNoteByID(id: ObjectId) {
   const query = { _id: id };
   const note = await notes.findOne<Note>(query);
   if (!note) {
-    throw new Error("Note wasn't found");
+    return undefined;
   }
   return note;
 }

@@ -13,8 +13,6 @@ import {
   postNoteSchema,
 } from "../services/validation";
 
-
-
 const validateObjectId: RequestHandler = async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -29,7 +27,6 @@ const validateNewNoteData: RequestHandler = async (req, res, next) => {
   try {
     const requestBody = req.body;
     const result = await postNoteSchema.validate(requestBody, { strict: true });
-    console.log(result);
     next();
   } catch (error) {
     res
@@ -53,11 +50,9 @@ const validateUpdateNote: RequestHandler = async (req, res, next) => {
 
 const router = express.Router();
 
-
 router.post("/", validateNewNoteData, async (req, res) => {
   try {
     const newNote = req.body;
-    console.log(newNote);
     const newNoteId = await createNewNote(newNote);
     res.status(201).json({ message: "Created a note object " + newNoteId });
   } catch {
@@ -68,19 +63,31 @@ router.post("/", validateNewNoteData, async (req, res) => {
 router.patch("/:id", validateObjectId, validateUpdateNote, async (req, res) => {
   try {
     const id = req.params.id;
-    const updates = req.body;
-    await editNote(id, updates);
-    res.json({ message: "Updated a note object " + id });
+    const requestBody = req.body;
+    const updated = await editNote(id, requestBody);
+    if (updated.matchedCount === 0) {
+      res.status(404).json({ message: "No such note." });
+    } else if (updated.modifiedCount !== 0) {
+      res.status(200).json({ message: "Updated a note object " + id });
+    } else {
+      res.status(204).json({ message: "No updates" });
+    }
   } catch {
-    res.status(500).json({ error: "Error while updating data" });
+    res.status(500).json({});
   }
 });
 
 router.delete("/:id", validateObjectId, async (req, res) => {
   try {
     const id = req.params.id;
-    await removeNoteById(id);
-    res.json({ message: "Successful delete note object with id " + id });
+    const deleteResult = await removeNoteById(id);
+    if (deleteResult) {
+      res
+        .status(200)
+        .json({ message: "Successful delete note object with id " + id });
+    } else {
+      res.status(404).json({message : "Not Found"})
+    }
   } catch {
     res.status(500).json({ error: "Error while deleting data" });
   }
@@ -101,7 +108,7 @@ router.get("/:id", validateObjectId, async (req, res) => {
     const id = req.params.id;
     const note = await getNoteById(id);
     if (!note) {
-      return res.status(404).json({ error: "Element not found" });
+      return res.status(404).json({ error: "Note not found" });
     }
     res.send(note);
   } catch {
