@@ -1,24 +1,69 @@
-import { MongoClient, Db } from "mongodb";
+import { DataTypes, Sequelize } from "sequelize";
 
-const MONGO_URI = "mongodb://localhost:27017";
-const DB_NAME = "mydb";
+const DB_NAME = "yourdb";
+const DB_USER = "youruser";
+const DB_PASSWORD = "yourpassword";
+const DB_HOST = "localhost";
+const DB_PORT = 5432;
 
-let client: MongoClient;
-let database: Db;
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  port: DB_PORT,
+  dialect: "postgres",
+});
 
 export async function connectToDatabase() {
   try {
-    client = new MongoClient(MONGO_URI);
-    await client.connect();
-    database = client.db(DB_NAME);
+    await sequelize.authenticate();
+    console.log(
+      "Connection to the database has been established successfully."
+    );
   } catch (error) {
-    throw new Error("Failed to connect to the database.");
+    console.error("Unable to connect to the database:", error);
   }
 }
 
-export function getDatabase() {
-  if (!database) {
-    throw new Error("Database connection not established.");
-  }
-  return database;
+export function getSequelizeInstance() {
+  return sequelize;
+}
+
+export function getSequelizeModels() {
+  const Note = sequelize.define("Note", {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    timeOfCreation: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    noteCategory: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    noteContent: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    datesMentioned: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    isArchived: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+  });
+
+  const Category = sequelize.define("Category", {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  });
+
+  return {
+    Note,
+    Category,
+  };
 }
