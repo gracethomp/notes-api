@@ -14,3 +14,5 @@ services:
       POSTGRES_USER: youruser
       POSTGRES_PASSWORD: yourpassword
       POSTGRES_DB: yourdb
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
