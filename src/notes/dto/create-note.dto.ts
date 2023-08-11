@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsDateString, IsBoolean, IsEnum } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsDateString,
+  IsBoolean,
+  IsEnum,
+} from 'class-validator';
 
 enum Category {
   Task = 'Task',
