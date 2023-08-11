@@ -40,7 +40,13 @@ export class NotesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() editNoteDto: EditNoteDto) {
+  async update(@Param('id') id: string, @Body() editNoteDto: EditNoteDto) {
+    const errors = await validate(editNoteDto, {
+      skipMissingProperties: true,
+    });
+    if (errors.length > 0) {
+      throw new BadRequestException('Validation failed');
+    }
     return this.notesService.updateNote(id, editNoteDto);
   }
 

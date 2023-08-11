@@ -7,11 +7,12 @@ import { v4 as uuidv4 } from 'uuid';
 export class NotesService {
   private notes = [
     {
-      id: '1',
+      id: 'a4f78499-1c0f-4db8-baa3-9af2adcafced',
       name: 'Note 1',
       date: '2023-08-10',
-      category: 'Category 1',
+      category: 'Task',
       content: 'Content 1',
+      isArchived: false,
     },
   ];
 
@@ -29,7 +30,7 @@ export class NotesService {
 
   createNote(createNoteDto: CreateNoteDto) {
     const note = { id: uuidv4(), ...createNoteDto };
-    this.notes.push(note);
+    this.notes = [...this.notes, note];
     return note;
   }
 
