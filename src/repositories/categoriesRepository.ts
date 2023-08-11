@@ -33,3 +33,15 @@ export async function findAllCategories() {
     return [];
   }
 }
+
+export async function findByID(id:number) {
+    const { Category } = getSequelizeModels();
+    try {
+      const neededNote = await Category.findByPk(id, {
+        attributes: ["name"]
+      });
+      return neededNote;
+    } catch (error) {
+      throw new Error("Error while fetching");
+    }
+}

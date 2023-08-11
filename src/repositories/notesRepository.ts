@@ -36,11 +36,19 @@ export async function deleteNoteById(id : number) {
 }
 
 export async function findNoteByID(id : number) {
-  const { note } = getSequelizeModels();
+  const { note, Category } = getSequelizeModels();
   try {
     const neededNote = await note.findByPk(id, {
-      attributes: ["id", "name", "timeofcreation", "notecategory", "notecontent", "datesmentioned", "isarchived"]
+      attributes: ["id", "name", "timeofcreation", "notecontent", "datesmentioned", "isarchived"],
+      include: [
+        {
+          model: Category,
+          attributes: ["name"],
+          as: 'notecategory', 
+        },
+      ],
     });
+    console.log(neededNote?.notecategory);
     return neededNote;
   } catch (error) {
     throw new Error("Error while fetching");
@@ -48,13 +56,23 @@ export async function findNoteByID(id : number) {
 }
 
 export async function findAllNotes() {
-  const { note } = getSequelizeModels();
+  const { note, Category } = getSequelizeModels();
   try {
     const allNotes = await note.findAll({
-      attributes: ["id", "name", "timeofcreation", "notecategory", "notecontent", "datesmentioned", "isarchived"]
+      attributes: ["id", "name", "timeofcreation", "notecontent", "datesmentioned", "isarchived"],
+      include: [
+        {
+          model: Category,
+          attributes: ["name"],
+          as: 'category', 
+        },
+      ],
     });
+
     return allNotes;
   } catch (error) {
-    throw new Error("Error while fetching" + error);
+    console.log(error);
+    throw new Error("Error while fetching: " + error);
   }
 }
+

@@ -7,7 +7,10 @@ import {
   deleteNoteById,
   updateNote,
 } from "../repositories/notesRepository";
-import { findAllCategories } from "../repositories/categoriesRepository";
+import {
+  findAllCategories,
+  findByID,
+} from "../repositories/categoriesRepository";
 import { NoteInstance } from "../helpers/models";
 
 interface UpdateNote {
@@ -29,10 +32,7 @@ export async function createNewNote(note: Note): Promise<number> {
   return id;
 }
 
-export async function editNote(
-  id: string,
-  updates: Note
-): Promise<number> {
+export async function editNote(id: string, updates: Note): Promise<number> {
   const updated = await updateNote(parseInt(id), updates);
   return updated;
 }
@@ -58,14 +58,13 @@ export async function getStats(): Promise<{
 }> {
   const categoryStats: { [category: string]: CategoryStats } =
     await initCategoryStats();
-  const allNotes: Note[] = await findAllNotes();
+  const allNotes = await findAllNotes();
   allNotes.forEach((note) => {
-    const { notecategory, isarchived } = note;
-    if (categoryStats.hasOwnProperty(notecategory)) {
-      if (isarchived) {
-        categoryStats[notecategory].archived++;
+    if (categoryStats.hasOwnProperty(note.category.name)) {
+      if (note.isarchived) {
+        categoryStats[note.category.name].archived++;
       } else {
-        categoryStats[notecategory].active++;
+        categoryStats[note.category.name].active++;
       }
     }
   });
