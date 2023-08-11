@@ -1,4 +1,4 @@
-import { object, boolean, string, ObjectSchema } from "yup";
+import { object, boolean, string, number } from "yup";
 import { findAllCategories } from "../repositories/categoriesRepository";
 import { Category } from "../helpers/Category";
 
@@ -48,3 +48,5 @@ export const objectIdSchema = string().test(
     return validObjectIdRegex.test(value);
   }
 );
+
+export const idSchema = number().positive().integer();

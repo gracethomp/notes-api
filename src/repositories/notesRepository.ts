@@ -44,11 +44,10 @@ export async function findNoteByID(id : number) {
         {
           model: Category,
           attributes: ["name"],
-          as: 'notecategory', 
+          as: 'category', 
         },
       ],
     });
-    console.log(neededNote?.notecategory);
     return neededNote;
   } catch (error) {
     throw new Error("Error while fetching");
@@ -71,7 +70,6 @@ export async function findAllNotes() {
 
     return allNotes;
   } catch (error) {
-    console.log(error);
     throw new Error("Error while fetching: " + error);
   }
 }
