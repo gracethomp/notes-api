@@ -1,6 +1,5 @@
 import { object, boolean, string, number } from "yup";
 import { findAllCategories } from "../repositories/categoriesRepository";
-import { Category } from "../helpers/Category";
 
 async function categoryExistsInDatabase(category: number) {
   const categories = await findAllCategories();
@@ -26,11 +25,11 @@ export const postNoteSchema = object()
 export const patchSchema = object()
   .shape({
     name: string().optional(),
-    timeOfCreation: string().optional(),
-    noteCategory: number().optional(),
-    noteContent: string().optional(),
-    datesMentioned: string().optional(),
-    isArchived: boolean().optional(),
+    timeofcreation: string().optional(),
+    notecategory: number().optional(),
+    notecontent: string().optional(),
+    datesmentioned: string().optional(),
+    isarchived: boolean().optional(),
   })
   .test("is-valid-category", "Invalid category", async function (note) {
     return note.noteCategory

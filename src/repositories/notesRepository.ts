@@ -10,7 +10,6 @@ export async function insertNewNote(newNoteData : NoteInstance) {
     });
     return newNote.id; 
   } catch (error) {
-    console.log(error);
     throw new Error("Error while inserting");
   }
 }
