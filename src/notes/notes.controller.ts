@@ -6,10 +6,12 @@ import {
   Delete,
   Param,
   Body,
+  BadRequestException,
 } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { EditNoteDto } from './dto/edit-note.dto';
+import { validate } from 'class-validator';
 
 @Controller('notes')
 export class NotesController {
@@ -26,7 +28,14 @@ export class NotesController {
   }
 
   @Post()
-  create(@Body() createNoteDto: CreateNoteDto) {
+  async create(@Body() createNoteDto: CreateNoteDto) {
+    const errors = await validate(createNoteDto, {
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    });
+    if (errors.length > 0) {
+      throw new BadRequestException('Validation failed');
+    }
     return this.notesService.createNote(createNoteDto);
   }
 

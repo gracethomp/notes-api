@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class NotesService {
   private notes = [
-    // Prepopulated data
     {
       id: '1',
       name: 'Note 1',
@@ -14,7 +13,6 @@ export class NotesService {
       category: 'Category 1',
       content: 'Content 1',
     },
-    // ... add more prepopulated data here
   ];
 
   getAllNotes() {
