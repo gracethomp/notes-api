@@ -38,8 +38,8 @@ export async function editNote(id: string, updates: Note): Promise<number> {
 }
 
 export async function removeNoteById(id: string): Promise<boolean> {
-  const objectId: ObjectId = new ObjectId(id);
   const result = await deleteNoteById(parseInt(id));
+  console.log(result);
   return result === 1;
 }
 

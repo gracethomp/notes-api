@@ -38,14 +38,4 @@ export const patchSchema = object()
   })
   .noUnknown();
 
-export const objectIdSchema = string().test(
-  "valid-objectId",
-  "Invalid ObjectId",
-  (value) => {
-    if (!value) return false;
-    const validObjectIdRegex = /^[0-9a-fA-F]{24}$/;
-    return validObjectIdRegex.test(value);
-  }
-);
-
 export const idSchema = number().positive().integer();
