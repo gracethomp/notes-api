@@ -4,7 +4,7 @@ import { initializeModels } from "./models";
 const DB_NAME = "yourdb";
 const DB_USER = "youruser";
 const DB_PASSWORD = "yourpassword";
-const DB_HOST = "localhost";
+const DB_HOST = "db";
 const DB_PORT = 5432;
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
