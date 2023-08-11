@@ -1,4 +1,5 @@
-import { DataTypes, Sequelize } from "sequelize";
+import { Sequelize } from "sequelize";
+import { initializeModels } from "./models";
 
 const DB_NAME = "yourdb";
 const DB_USER = "youruser";
@@ -28,42 +29,9 @@ export function getSequelizeInstance() {
 }
 
 export function getSequelizeModels() {
-  const Note = sequelize.define("Note", {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    timeOfCreation: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    noteCategory: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    noteContent: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    datesMentioned: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    isArchived: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-  });
-
-  const Category = sequelize.define("Category", {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  });
-
+  const {note, Category} = initializeModels(sequelize);
   return {
-    Note,
+    note,
     Category,
   };
 }

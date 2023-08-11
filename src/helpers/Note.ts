@@ -1,11 +1,9 @@
-import { ObjectId } from "mongodb";
-
 export interface Note {
-  _id: ObjectId;
+  id: number;
   name: string;
-  timeOfCreation: string;
-  noteCategory: string;
-  noteContent: string;
-  datesMentioned: string;
-  isArchived: boolean;
+  timeofcreation: string;
+  notecategory: string;
+  notecontent: string;
+  datesmentioned: string;
+  isarchived: boolean;
 }

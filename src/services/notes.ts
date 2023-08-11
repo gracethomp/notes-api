@@ -8,6 +8,7 @@ import {
   updateNote,
 } from "../repositories/notesRepository";
 import { findAllCategories } from "../repositories/categoriesRepository";
+import { NoteInstance } from "../helpers/models";
 
 interface UpdateNote {
   name?: string;
@@ -23,32 +24,27 @@ interface CategoryStats {
   active: number;
 }
 
-export async function createNewNote(note: Note): Promise<ObjectId> {
+export async function createNewNote(note: Note): Promise<number> {
   const id = await insertNewNote(note);
   return id;
 }
 
 export async function editNote(
   id: string,
-  updates: UpdateNote
-): Promise<UpdateResult<Note>> {
-  const objectId: ObjectId = new ObjectId(id);
-  const updated = await updateNote(objectId, updates);
+  updates: Note
+): Promise<number> {
+  const updated = await updateNote(parseInt(id), updates);
   return updated;
 }
 
 export async function removeNoteById(id: string): Promise<boolean> {
   const objectId: ObjectId = new ObjectId(id);
-  const result = await deleteNoteById(objectId);
-  if (result.deletedCount === 1) {
-    return true;
-  }
-  return false;
+  const result = await deleteNoteById(parseInt(id));
+  return result === 1;
 }
 
-export async function getNoteById(id: string): Promise<Note | undefined> {
-  const objectId: ObjectId = new ObjectId(id);
-  const newNote = await findNoteByID(objectId);
+export async function getNoteById(id: string): Promise<NoteInstance | null> {
+  const newNote = await findNoteByID(parseInt(id));
   return newNote;
 }
 
@@ -64,12 +60,12 @@ export async function getStats(): Promise<{
     await initCategoryStats();
   const allNotes: Note[] = await findAllNotes();
   allNotes.forEach((note) => {
-    const { noteCategory, isArchived } = note;
-    if (categoryStats.hasOwnProperty(noteCategory)) {
-      if (isArchived) {
-        categoryStats[noteCategory].archived++;
+    const { notecategory, isarchived } = note;
+    if (categoryStats.hasOwnProperty(notecategory)) {
+      if (isarchived) {
+        categoryStats[notecategory].archived++;
       } else {
-        categoryStats[noteCategory].active++;
+        categoryStats[notecategory].active++;
       }
     }
   });

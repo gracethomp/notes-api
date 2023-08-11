@@ -13,16 +13,6 @@ import {
   postNoteSchema,
 } from "../services/validation";
 
-const validateObjectId: RequestHandler = async (req, res, next) => {
-  try {
-    const id = req.params.id;
-    await objectIdSchema.validate(id);
-    next();
-  } catch (error) {
-    res.status(400).json({ error: "Wrong id format" });
-  }
-};
-
 const validateNewNoteData: RequestHandler = async (req, res, next) => {
   try {
     const requestBody = req.body;
@@ -60,16 +50,18 @@ router.post("/", validateNewNoteData, async (req, res) => {
   }
 });
 
-router.patch("/:id", validateObjectId, validateUpdateNote, async (req, res) => {
+router.patch("/:id", validateUpdateNote, async (req, res) => {
   try {
     const id = req.params.id;
     const requestBody = req.body;
     const updated = await editNote(id, requestBody);
-    if (updated.matchedCount === 0) {
+    if (updated === 0) {
       res.status(404).json({ message: "No such note." });
-    } else if (updated.modifiedCount !== 0) {
-      res.status(200).json({ message: "Updated a note object " + id });
-    } else {
+    } 
+    // else if (updated ) {
+    //   res.status(200).json({ message: "Updated a note object " + id });
+    // } 
+    else {
       res.status(204).json({ message: "No updates" });
     }
   } catch {
@@ -77,7 +69,7 @@ router.patch("/:id", validateObjectId, validateUpdateNote, async (req, res) => {
   }
 });
 
-router.delete("/:id", validateObjectId, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const deleteResult = await removeNoteById(id);
@@ -103,7 +95,7 @@ router.get("/stats", async (req, res) => {
   }
 });
 
-router.get("/:id", validateObjectId, async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const note = await getNoteById(id);
