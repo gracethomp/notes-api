@@ -2,23 +2,23 @@ import { object, boolean, string, number } from "yup";
 import { findAllCategories } from "../repositories/categoriesRepository";
 import { Category } from "../helpers/Category";
 
-async function categoryExistsInDatabase(category: string) {
+async function categoryExistsInDatabase(category: number) {
   const categories = await findAllCategories();
-  return categories.some((item) => item.name === category);
+  return categories.some((item) => item.id == category);
 }
 
 export const postNoteSchema = object()
   .shape({
     name: string().required(),
-    timeOfCreation: string().required(),
-    noteCategory: string().required(),
-    noteContent: string().required(),
-    datesMentioned: string().defined(),
-    isArchived: boolean().required(),
+    timeofcreation: string().required(),
+    notecategory: number().required(),
+    notecontent: string().required(),
+    datesmentioned: string().defined(),
+    isarchived: boolean().required(),
   })
   .test("is-valid-category", "Invalid category", async function (note) {
-    return note.noteCategory
-      ? await categoryExistsInDatabase(note.noteCategory)
+    return note.notecategory
+      ? await categoryExistsInDatabase(note.notecategory)
       : false;
   })
   .noUnknown();
@@ -27,7 +27,7 @@ export const patchSchema = object()
   .shape({
     name: string().optional(),
     timeOfCreation: string().optional(),
-    noteCategory: string().optional(),
+    noteCategory: number().optional(),
     noteContent: string().optional(),
     datesMentioned: string().optional(),
     isArchived: boolean().optional(),

@@ -27,7 +27,7 @@ interface CategoryStats {
   active: number;
 }
 
-export async function createNewNote(note: Note): Promise<number> {
+export async function createNewNote(note: NoteInstance): Promise<number> {
   const id = await insertNewNote(note);
   return id;
 }

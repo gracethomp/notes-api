@@ -4,7 +4,7 @@ export interface Note {
   id: number;
   name: string;
   timeofcreation: string;
-  notecategory: Category;
+  notecategory: number;
   notecontent: string;
   datesmentioned: string;
   isarchived: boolean;

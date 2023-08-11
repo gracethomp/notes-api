@@ -1,12 +1,16 @@
 import { Note } from "../helpers/Note";
 import { getSequelizeModels } from "../helpers/db";
+import { NoteInstance } from "../helpers/models";
 
-export async function insertNewNote(newNoteData : Note) {
+export async function insertNewNote(newNoteData : NoteInstance) {
   const { note } = getSequelizeModels();
   try {
-    const newNote = await note.create(newNoteData);
+    const newNote = await note.create(newNoteData, {
+      fields: ["name", "timeofcreation", "notecategory", "notecontent", "datesmentioned", "isarchived"]
+    });
     return newNote.id; 
   } catch (error) {
+    console.log(error);
     throw new Error("Error while inserting");
   }
 }

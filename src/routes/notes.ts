@@ -1,4 +1,4 @@
-import express, { NextFunction, RequestHandler } from "express";
+import express, { RequestHandler } from "express";
 import {
   createNewNote,
   editNote,
@@ -9,7 +9,6 @@ import {
 } from "../services/notes";
 import {
   idSchema,
-  objectIdSchema,
   patchSchema,
   postNoteSchema,
 } from "../services/validation";

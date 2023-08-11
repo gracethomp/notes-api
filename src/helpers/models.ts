@@ -25,8 +25,8 @@ export function initializeModels(sequelize: Sequelize) {
   const note = sequelize.define<NoteInstance>("notes", {
     id: {
       type: DataTypes.NUMBER,
-      allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true, 
     },
     name: {
       type: DataTypes.STRING,
@@ -56,6 +56,8 @@ export function initializeModels(sequelize: Sequelize) {
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
+  }, {
+    timestamps: false, 
   });
 
   note.belongsTo(category, { foreignKey: 'notecategory', as: 'category' });
